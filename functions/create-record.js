@@ -193,6 +193,8 @@ async function sendSmsForRecord(env, record, type, force = false) {
 async function maybeAutoConfirm(env, record) {
   if (String(env.SMS_AUTO_CONFIRM ?? "1") === "0") return { ok:false, skipped:true, reason:"SMS_AUTO_CONFIRM=0" };
   const f = record?.fields || {};
+  const log = smsLogFromFields(f);
+  if (log?.queue?.confirm?.status === "canceled") return { ok:false, skipped:true, reason:"Подтверждение отменено в SMS-панели" };
   if (!normalizePhone(f["Телефон"])) return { ok:false, skipped:true, reason:"Нет телефона" };
   if (!dateValue(f)) return { ok:false, skipped:true, reason:"Нет даты" };
   try { return await sendSmsForRecord(env, record, "confirm", false); }

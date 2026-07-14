@@ -1,0 +1,48 @@
+Cloudflare Pages → Settings → Environment variables
+===================================================
+
+Минимально для NocoDB:
+
+NOCODB_API_URL=https://ВАШ-NOCODB-ДОМЕН
+NOCODB_TABLE_ID=ID_ТАБЛИЦЫ_ЗАЯВОК
+NOCODB_API_TOKEN=ВАШ_XC_TOKEN
+
+Можно вместо NOCODB_API_URL + NOCODB_TABLE_ID указать готовый endpoint:
+
+NOCODB_RECORDS_ENDPOINT=https://ВАШ-NOCODB-ДОМЕН/api/v2/tables/ID_ТАБЛИЦЫ/records
+NOCODB_API_TOKEN=ВАШ_XC_TOKEN
+
+Админ-доступ:
+
+ADMIN_PASSWORD=sergey41
+
+Если ADMIN_PASSWORD задан, пароль входа в админку должен совпадать с ним.
+Если ADMIN_PASSWORD не задан, функции Cloudflare не будут проверять пароль.
+
+SMS / SigmaSMS:
+
+SMS_ENABLED=1
+SIGMASMS_USERNAME=логин
+SIGMASMS_PASSWORD=пароль
+SIGMASMS_SENDER=SOLNCANET
+SMS_TIMEZONE_OFFSET_MINUTES=300
+SMS_CRON_SECRET=любой_длинный_секрет
+
+Для тестов без реальной отправки:
+
+SMS_DRY_RUN=1
+
+Шаблоны SMS можно переопределить переменными:
+
+SMS_TEMPLATE_CONFIRM=СОЛНЦАНЕТ: запись оформлена на {Дата} в {Время}.
+SMS_TEMPLATE_DAY=СОЛНЦАНЕТ: напоминаем о записи {Дата} в {Время}.
+SMS_TEMPLATE_2H=СОЛНЦАНЕТ: до записи осталось 2 часа.
+SMS_TEMPLATE_RESCHEDULE=СОЛНЦАНЕТ: запись перенесена на {Дата} в {Время}.
+SMS_TEMPLATE_REVIEW=Спасибо, что выбрали СОЛНЦАНЕТ! Оставьте отзыв: https://clck.su/solncanet
+
+GitHub → Settings → Secrets and variables → Actions:
+
+SOLNCANET_SITE_URL=https://адрес-вашего-сайта.pages.dev
+SMS_CRON_SECRET=тот_же_секрет_что_в_Cloudflare
+
+GitHub Actions запускает /sms-cron каждые 15 минут.

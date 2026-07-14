@@ -217,6 +217,6 @@ export async function onRequest(context) {
       catch (e) { nocodb = "ошибка: " + e.message; }
     }
     const sms = smsEnabled(context.env || {}) ? "включены" : "выключены: SMS_ENABLED не включён";
-    return json({ ok:true, version:"v67-sms-auto", cloudflare:"OK", nocodb, sms, smsProvider:(context.env || {}).SMS_WEBHOOK_URL ? "webhook" : "sigmasms" });
+    return json({ ok:true, version:"v71-legacy-sms-queue", cloudflare:"OK", nocodb, sms, smsProvider:(context.env || {}).SMS_WEBHOOK_URL ? "webhook" : "sigmasms" });
   } catch (e) { return err(e); }
 }

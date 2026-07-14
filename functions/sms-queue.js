@@ -279,40 +279,23 @@ async function handlePost(env, body) {
   const fresh = await getRecord(env, record.id);
   return { ok:true, action, item:buildQueueItem(env, fresh, type, Date.now()) };
 }
-
-function cronOk(request, env) {
-  const secret = env.SMS_CRON_SECRET || "";
-  const url = new URL(request.url);
-  const got = request.headers.get("x-cron-secret") || url.searchParams.get("key") || "";
-  if (secret && got === secret) return true;
-  return adminOk(request, env);
-}
 export async function onRequest(context) {
   const o = options(context.request); if (o) return o;
   try {
     const env = context.env || {};
-    if (!cronOk(context.request, env)) throw makeError("Нет доступа к SMS cron", 401);
-    const body = context.request.method === "POST" ? await readBody(context.request).catch(()=>({})) : {};
-    const nowMs = body.now ? Date.parse(body.now) : Date.now();
-    const limit = Number(env.SMS_CRON_LIMIT || 500);
-    const rows = await listRecords(env, limit);
-    const results = [];
-    for (const record of rows) {
-      for (const type of ["day", "two_hours"]) {
-        const item = buildQueueItem(env, record, type, nowMs);
-        if (item.status !== "due") continue;
-        try {
-          const fresh = await getRecord(env, record.id) || record;
-          const freshItem = buildQueueItem(env, fresh, type, nowMs);
-          if (freshItem.status !== "due") { results.push({ id:record.id, type, skipped:true, reason:freshItem.statusLabel }); continue; }
-          const result = await sendSmsForRecord(env, fresh, type, false);
-          results.push({ id:record.id, type, scheduledAt:freshItem.scheduledAt, result });
-          await sleep(Number(env.SMS_SEND_PAUSE_MS || 350));
-        } catch (e) {
-          results.push({ id:record.id, type, ok:false, error:e.message, details:e.details || null });
-        }
-      }
+    checkAdmin(context.request, env);
+    if (context.request.method === "GET") {
+      const url = new URL(context.request.url);
+      const limit = Number(url.searchParams.get("limit") || env.SMS_QUEUE_LIMIT || 1000);
+      const rows = await listRecords(env, limit);
+      const nowMs = Date.now();
+      const items = rows.flatMap(record => AUTO_TYPES.map(type => buildQueueItem(env, record, type, nowMs)));
+      const stats = items.reduce((acc, item) => { acc[item.status] = (acc[item.status] || 0) + 1; return acc; }, {});
+      return json({ ok:true, items, stats, checked:rows.length, version:"v71-legacy-sms-queue" });
     }
-    return json({ ok:true, checked:rows.length, sent:results.filter(x=>x.result?.ok).length, results, version:"v71-legacy-sms-queue-cron" });
+    if (context.request.method !== "POST") throw makeError("Метод не поддерживается", 405);
+    const body = await readBody(context.request);
+    const data = await handlePost(env, body);
+    return json(data);
   } catch (e) { return err(e); }
 }
