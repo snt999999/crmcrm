@@ -1,0 +1,79 @@
+Переменные Cloudflare Pages для v67
+===================================
+
+Обязательные для NocoDB:
+
+NOCODB_API_URL
+Пример: https://app.nocodb.com или ваш адрес NocoDB без /api/v2 в конце.
+
+NOCODB_TABLE_ID
+ID таблицы заявок NocoDB.
+Можно также использовать NOCODB_REQUESTS_TABLE_ID или NOCODB_ZAYAVKI_TABLE_ID.
+
+NOCODB_API_TOKEN
+API-токен NocoDB.
+Можно также использовать NOCODB_TOKEN или XC_TOKEN.
+
+Рекомендуемые:
+
+ADMIN_PASSWORD
+Пароль для защиты Cloudflare Functions. Должен совпадать с паролем входа, который используете в админке.
+Например: sergey41
+
+NOCODB_MAX_RETRIES
+По умолчанию 5. Защита от Too Many Requests.
+
+NOCODB_RETRY_BASE_MS
+По умолчанию 650.
+
+Обязательные для SMS:
+
+SMS_ENABLED=1
+Включает реальную отправку SMS. Пока не указано SMS_ENABLED=1, заявки сохраняются, но SMS не отправляются.
+
+SIGMASMS_USERNAME
+Логин SigmaSMS / SIGMA messaging.
+
+SIGMASMS_PASSWORD
+Пароль SigmaSMS / SIGMA messaging.
+
+SIGMASMS_SENDER
+Зарегистрированное имя отправителя. Например: SOLNCANET.
+Важно: имя отправителя должно быть разрешено в кабинете SMS-сервиса.
+
+SMS_CRON_SECRET
+Любая длинная секретная строка. Нужна для запуска автоматических напоминаний через GitHub Actions.
+Такой же секрет нужно добавить в GitHub Actions secrets.
+
+Рекомендуемые для SMS:
+
+SMS_TIMEZONE_OFFSET_MINUTES=300
+Екатеринбург = UTC+5 = 300 минут.
+
+SIGMASMS_API_BASE=https://online.sigmasms.ru/api
+Можно не указывать, это значение используется по умолчанию.
+
+SMS_AUTO_CONFIRM=1
+Автоподтверждение записи. По умолчанию включено.
+
+SMS_DRY_RUN=1
+Тестовый режим: SMS не отправляются реально, но функция показывает, что бы она отправила.
+Для боевого запуска удалить или поставить 0.
+
+Окна отправки напоминаний:
+
+SMS_DAY_MIN_MINUTES=1380
+SMS_DAY_MAX_MINUTES=1500
+Это окно примерно за 23–25 часов до записи.
+
+SMS_TWO_HOURS_MIN_MINUTES=105
+SMS_TWO_HOURS_MAX_MINUTES=135
+Это окно примерно за 1 час 45 минут – 2 часа 15 минут до записи.
+
+Можно переопределить тексты шаблонов:
+
+SMS_TEMPLATE_CONFIRM
+SMS_TEMPLATE_DAY
+SMS_TEMPLATE_2H
+SMS_TEMPLATE_RESCHEDULE
+SMS_TEMPLATE_REVIEW

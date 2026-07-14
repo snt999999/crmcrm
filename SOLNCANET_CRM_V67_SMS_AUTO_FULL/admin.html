@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>СОЛНЦАНЕТ CRM v67</title>
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <meta name="theme-color" content="#e71630" />
+  <link rel="icon" href="/assets/icons/icon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="assets/admin.css?v=67" />
+</head>
+<body class="admin-body">
+  <section id="loginScreen" class="login-screen">
+    <div class="login-card">
+      <img src="assets/logo-solncanet.svg" alt="СОЛНЦАНЕТ">
+      <h1>Вход в CRM</h1>
+      <p class="hint">Локальный вход для админ-панели. Доступ к NocoDB дополнительно защищается переменными Cloudflare.</p>
+      <form id="loginForm">
+        <input id="loginPassword" type="password" placeholder="Пароль" autocomplete="current-password" required>
+        <br><br>
+        <button class="btn btn--red" type="submit">Войти</button>
+      </form>
+      <p id="loginMsg" class="message"></p>
+    </div>
+  </section>
+
+  <section id="app" class="admin-shell hidden">
+    <div class="admin-topbar">
+      <div class="brand"><img src="assets/logo-solncanet.svg" alt="СОЛНЦАНЕТ"><span>CRM v67 clean</span></div>
+      <div class="btn-row">
+        <button id="newBtn" class="btn btn--red" type="button">+ Новая заявка</button>
+        <button id="refreshBtn" class="btn btn--light" type="button">Обновить</button>
+        <button id="logoutBtn" class="btn btn--light" type="button">Выйти</button>
+      </div>
+    </div>
+    <div class="admin-layout">
+      <aside class="sidebar">
+        <button data-section="requests" class="active">Заявки</button>
+        <button data-section="calendar">Календарь</button>
+        <button data-section="reports">Отчёты</button>
+        <button data-section="trash">Корзина</button>
+        <button data-section="settings">Проверка</button>
+      </aside>
+      <main class="content">
+        <p id="appMsg" class="message"></p>
+
+        <section id="section-requests" class="panel">
+          <div class="panel-title"><div><h1>Заявки</h1><p class="hint">Авто и архитектура. SMS: подтверждение автоматически, напоминания автоматически, перенос и отзыв вручную.</p></div><div class="btn-row"><button id="downloadXlsBtn" class="btn-small blue">Скачать Excel</button><button id="downloadCsvBtn" class="btn-small">CSV</button></div></div>
+          <div class="stats"><div class="stat"><span>Всего</span><b id="statTotal">0</b></div><div class="stat"><span>Новые</span><b id="statNew">0</b></div><div class="stat"><span>Авто сумма</span><b id="statAuto">0 ₽</b></div><div class="stat"><span>м² архитектура</span><b id="statM2">0</b></div></div>
+          <div class="filters"><input id="search" placeholder="Поиск: клиент, телефон, авто, адрес, услуга"><select id="directionFilter"><option value="">Все направления</option><option>Авто</option><option>Архитектура</option></select><select id="statusFilter"><option value="">Все статусы</option><option>Новая заявка</option><option>В работе</option><option>Выполнено</option><option>Оплачено</option><option>Отменена</option><option>Удалена</option></select><input id="dateFilter" type="date"><button id="clearFilters" class="btn-small" type="button">Сброс</button></div>
+          <div class="table-wrap"><table><thead><tr><th>#</th><th>Дата</th><th>Клиент</th><th>Телефон</th><th>Направление</th><th>Объект</th><th>Услуга</th><th>Сумма / м²</th><th>Статус</th><th></th></tr></thead><tbody id="requestsBody"></tbody></table></div>
+        </section>
+
+        <section id="section-calendar" class="panel hidden">
+          <h1>Календарь</h1>
+          <p class="hint">Упрощённый список ближайших записей из заявок.</p>
+          <div id="calendarList" class="cards"></div>
+        </section>
+
+        <section id="section-reports" class="panel hidden">
+          <h1>Отчёты</h1>
+          <div class="report-filters"><input id="reportFrom" type="date"><input id="reportTo" type="date"><select id="reportDirection"><option value="">Все направления</option><option>Авто</option><option>Архитектура</option></select><select id="reportStatus"><option value="">Все статусы</option><option>Выполнено</option><option>Оплачено</option><option>В работе</option><option>Новая заявка</option></select><button id="reportXlsBtn" class="btn-small blue">Скачать отчёт</button></div>
+          <div class="table-wrap"><table><thead><tr><th>Показатель</th><th>Значение</th></tr></thead><tbody id="reportBody"></tbody></table></div>
+        </section>
+
+        <section id="section-trash" class="panel hidden">
+          <h1>Корзина</h1>
+          <p class="hint">Удаление безопасное: заявка получает статус «Удалена», физически из NocoDB не стирается.</p>
+          <div class="table-wrap"><table><thead><tr><th>#</th><th>Дата</th><th>Клиент</th><th>Телефон</th><th>Услуга</th><th>Статус</th><th></th></tr></thead><tbody id="trashBody"></tbody></table></div>
+        </section>
+
+        <section id="section-settings" class="panel hidden">
+          <h1>Проверка подключения</h1>
+          <div class="btn-row"><button id="healthBtn" class="btn-small blue">Проверить Cloudflare / NocoDB / SMS</button><button id="runSmsCronBtn" class="btn-small blue">Запустить SMS-напоминания сейчас</button><button id="clearCacheBtn" class="btn-small">Очистить кеш браузера</button></div>
+          <p id="healthResult" class="ok-note">После загрузки на Cloudflare нажмите проверку. Если переменные окружения заполнены, будет статус OK.</p><p class="hint">Автоматически отправляются: подтверждение записи, напоминание за день и за 2 часа. Вручную из карточки отправляются: перенос записи и благодарность с отзывом.</p>
+          <div class="danger-note"><b>Важно:</b> эта сборка содержит SMS-автоматизацию v67. В GitHub нужно загрузить содержимое архива в корень репозитория.</div>
+        </section>
+      </main>
+    </div>
+  </section>
+
+  <dialog id="requestDialog">
+    <div class="dialog-head"><div><h2 id="dialogTitle">Заявка</h2><p id="dialogSub" class="hint">Сохраните изменения кнопкой «Сохранить».</p></div><button id="closeDialog" class="close-x" type="button">×</button></div>
+    <div class="dialog-body">
+      <div class="dialog-grid">
+        <label class="field">Дата записи<input id="fDate" type="date"></label>
+        <label class="field">Время записи<input id="fTime" type="time"></label>
+        <label class="field">Статус<select id="fStatus"><option>Новая заявка</option><option>В работе</option><option>Выполнено</option><option>Оплачено</option><option>Отменена</option><option>Удалена</option></select></label>
+        <label class="field">Направление<select id="fDirection"><option>Авто</option><option>Архитектура</option></select></label>
+        <label class="field">Имя клиента<input id="fName" placeholder="Фамилия имя"></label>
+        <label class="field">Телефон<input id="fPhone" placeholder="+7..."></label>
+        <label class="field">Ответственный<input id="fResponsible" placeholder="Роман / Сергей / монтажник"></label>
+        <label class="field">Компания<input id="fCompany" placeholder="Название компании"></label>
+        <label class="field arch-only" data-arch-field="m2">Итоговый м²<input id="fM2" inputmode="decimal"></label>
+        <label class="field arch-only" data-arch-field="film">Материал / плёнка<input id="fFilm" placeholder="Материал для архитектуры"></label>
+        <label class="field arch-only full" data-arch-field="address">Адрес<input id="fAddress" placeholder="Адрес объекта"></label>
+        <label class="field arch-only full" data-arch-field="service">Услуга<input id="fService" placeholder="Например: тонировка окон"></label>
+
+        <div id="autoBlock" class="dialog-section">
+          <h3>Авто</h3>
+          <label class="field">Автомобиль<input id="fAuto" placeholder="Например: Solaris 2015, BMW X5"></label>
+          <h3>Услуги и стоимость</h3>
+          <div id="autoRows"></div>
+          <button id="addAutoService" class="btn-small blue" type="button">+ услуга</button>
+          <div class="auto-total">Общая стоимость: <b id="autoTotal">0 ₽</b></div>
+        </div>
+
+        <label class="field full">Комментарий<textarea id="fComment" placeholder="Комментарий клиента / администратора"></textarea></label>
+      </div>
+    </div>
+    <div class="dialog-actions"><button id="deleteBtn" class="btn-small red" type="button">В корзину</button><button id="sendRescheduleSmsBtn" class="btn-small blue" type="button">SMS перенос</button><button id="sendReviewSmsBtn" class="btn-small blue" type="button">SMS отзыв</button><button id="saveBtn" class="btn btn--red" type="button">Сохранить</button></div>
+  </dialog>
+
+  <script src="assets/admin.js?v=67"></script>
+</body>
+</html>
