@@ -1,0 +1,23 @@
+GitHub Actions для автоматических SMS-напоминаний
+=================================================
+
+В архиве уже есть файл:
+.github/workflows/sms-reminders.yml
+
+Он запускает /sms-cron каждые 15 минут.
+
+Что нужно сделать в GitHub:
+
+1. Откройте репозиторий.
+2. Settings -> Secrets and variables -> Actions.
+3. Нажмите New repository secret.
+4. Добавьте секрет:
+   SOLNCANET_SITE_URL = адрес сайта Cloudflare Pages, например https://ваш-проект.pages.dev
+5. Добавьте секрет:
+   SMS_CRON_SECRET = тот же секрет, который указан в Cloudflare Pages переменной SMS_CRON_SECRET.
+6. Откройте вкладку Actions.
+7. Если GitHub спросит разрешение на запуск workflows, нажмите Enable workflows.
+8. Откройте workflow "SOLNCANET SMS reminders" и нажмите Run workflow для ручной проверки.
+
+Важно:
+Без GitHub Actions или другого планировщика напоминания за день и за 2 часа не смогут уйти сами, потому что сайту нужен внешний запуск /sms-cron.
