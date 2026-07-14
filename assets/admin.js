@@ -24,7 +24,7 @@
   let smsQueue = [];
   let current = null;
   let currentClientKey = '';
-  let currentSection = 'dashboard';
+  let currentSection = 'requests';
   let currentWorkspace = localStorage.getItem(LS_WORKSPACE) || 'all';
   let cal = new Date();
   let selectedDate = today();

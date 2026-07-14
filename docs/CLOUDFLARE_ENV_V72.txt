@@ -1,0 +1,23 @@
+Cloudflare Pages → Settings → Environment variables
+
+Обязательные для NocoDB:
+ADMIN_PASSWORD=пароль_админа
+NOCODB_BASE_URL=https://адрес-nocodb
+NOCODB_API_TOKEN=токен
+NOCODB_TABLE_ID=таблица_заявок
+
+Для SMS:
+SMS_ENABLED=1
+SIGMASMS_USERNAME=логин
+SIGMASMS_PASSWORD=пароль
+SIGMASMS_SENDER=SOLNCANET
+SMS_CRON_SECRET=длинный_секрет
+SMS_TIMEZONE_OFFSET_MINUTES=300
+
+Для SMS-очереди в отдельной таблице NocoDB, если используется:
+NOCODB_SMS_ENDPOINT=endpoint_таблицы_sms
+NOCODB_SMS_TABLE_ID=таблица_sms
+
+GitHub → Settings → Secrets and variables → Actions:
+SOLNCANET_SITE_URL=https://адрес-сайта.pages.dev
+SMS_CRON_SECRET=тот_же_секрет_что_в_Cloudflare

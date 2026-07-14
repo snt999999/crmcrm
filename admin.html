@@ -3,22 +3,21 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>СОЛНЦАНЕТ CRM v71</title>
+  <title>Админ-панель — СОЛНЦАНЕТ</title>
   <link rel="manifest" href="/manifest.webmanifest" />
   <meta name="theme-color" content="#e71630" />
   <link rel="icon" href="/assets/icons/icon.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="assets/admin.css?v=71" />
+  <link rel="stylesheet" href="assets/admin.css?v=72" />
 </head>
 <body class="admin-body">
-  <button id="mobileMenuBtn" class="mobile-menu" type="button" aria-label="Меню">☰</button>
+  <button id="mobileMenuBtn" class="mobile-menu-btn" type="button" aria-label="Меню">☰</button>
   <div id="sidebarOverlay" class="sidebar-overlay"></div>
 
-  <section id="loginScreen" class="login-screen">
+  <section id="loginScreen" class="login">
     <div class="login-card">
       <div class="login-logo"><img src="assets/logo-solncanet.svg" alt="СОЛНЦАНЕТ"></div>
-      <p class="pretitle">Внутренняя CRM</p>
-      <h1>Вход в панель</h1>
-      <p class="hint">Вернул старую удобную оболочку: левое меню, верхняя панель, быстрый поиск, карточки, таблицы, календарь, отчёты и SMS.</p>
+      <h1>Вход в админ-панель</h1>
+      <p class="hint">Введите пароль своего аккаунта.</p>
       <form id="loginForm">
         <label>Пароль
           <input id="loginPassword" type="password" placeholder="Введите пароль" autocomplete="current-password" required>
@@ -31,7 +30,7 @@
 
   <section id="app" class="app-shell hidden">
     <aside id="sidebar" class="sidebar">
-      <div class="sidebar-head">
+      <div class="sidebar-logo">
         <img src="assets/logo-solncanet.svg" alt="СОЛНЦАНЕТ">
         <button id="sidebarCloseBtn" class="sidebar-close" type="button">×</button>
       </div>
@@ -43,21 +42,20 @@
           <option value="architecture">Архитектура</option>
         </select>
       </div>
-      <nav class="side-nav" aria-label="Разделы CRM">
-        <button data-section="dashboard" class="active">Главная</button>
-        <button data-section="requests">Заявки</button>
+      <nav class="side-nav sidebar-nav" aria-label="Разделы CRM">
+        <button data-section="requests" class="active">Заявки</button>
         <button data-section="calendar">Календарь</button>
         <button data-section="clients">Клиенты</button>
         <button data-section="objects">Объекты</button>
-        <button data-section="installers">Монтажники / ЗП</button>
-        <button data-section="files">Файлы</button>
+        <button data-section="installers">Монтажники</button>
+        <button data-section="trash">Корзина отмен</button>
         <button data-section="history">История</button>
         <button data-section="notifications">Уведомления</button>
         <button data-section="sms">SMS очередь</button>
-        <button data-section="calendarImport">Импорт календаря</button>
+        <button data-section="files">Файлы</button>
         <button data-section="reports">Отчёты</button>
-        <button data-section="trash">Корзина</button>
-        <button data-section="settings">Проверка</button>
+        <button data-section="settings">Настройки</button>
+        <button data-section="calendarImport">Импорт календаря</button>
       </nav>
       <div class="sidebar-footer">
         <button id="logoutBtn" class="ghost-btn" type="button">Выйти</button>
@@ -67,7 +65,7 @@
     <main class="admin-main">
       <header class="admin-topbar">
         <div>
-          <p class="top-kicker">СОЛНЦАНЕТ CRM v71</p>
+          <p class="top-kicker">Сотрудник · Архитектура</p>
           <h1 id="pageTitle">Главная</h1>
         </div>
         <div class="global-search-wrap">
@@ -224,6 +222,6 @@
     <div class="dialog-body"><div class="stat-grid compact"><div class="stat-card"><span>Заявок</span><b id="clientCardStatRequests">0</b></div><div class="stat-card"><span>м²</span><b id="clientCardStatM2">0</b></div><div class="stat-card"><span>Выполнено</span><b id="clientCardStatDone">0</b></div><div class="stat-card"><span>Последняя</span><b id="clientCardStatLast">—</b></div></div><div id="clientCardInfo" class="mini-cards"></div><div class="table-wrap"><table><thead><tr><th>#</th><th>Дата</th><th>Услуга</th><th>Статус</th><th></th></tr></thead><tbody id="clientCardRequestsBody"></tbody></table></div></div>
   </dialog>
 
-  <script src="assets/admin.js?v=71"></script>
+  <script src="assets/admin.js?v=72"></script>
 </body>
 </html>
