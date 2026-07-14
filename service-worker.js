@@ -1,4 +1,4 @@
-const CACHE_NAME = 'solncanet-v72-design-url';
+const CACHE_NAME = 'solncanet-v73-target-style';
 const APP_SHELL = [
   '/',
   '/index.html',
@@ -9,8 +9,8 @@ const APP_SHELL = [
   '/assets/site.js',
   '/assets/admin.js',
   '/assets/pwa.js',
-  '/assets/logo-solncanet.svg',
-  '/assets/icons/icon.svg',
+  '/assets/logo-solncanet.png',
+  '/assets/icons/icon-512.png',
   '/manifest.webmanifest'
 ];
 

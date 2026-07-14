@@ -7,6 +7,7 @@
   const msg = document.getElementById('leadMessage');
   const btn = document.getElementById('leadSubmitBtn');
   const today = () => new Date().toISOString().slice(0,10);
+  const inferDirection = (service='') => /автомоб|фар|полиуретан|ppf/i.test(String(service)) ? 'Авто' : 'Архитектура';
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
     const data = Object.fromEntries(new FormData(form).entries());
@@ -16,12 +17,12 @@
       'Имя клиента': (data.name || '').trim(),
       'Компания': (data.companyName || '').trim(),
       'Телефон': (data.phone || '').trim(),
-      'Направление': data.direction || 'Авто',
+      'Направление': inferDirection(data.service),
       'Услуга': data.service || 'Заявка с сайта',
       'Дата записи': data.preferredDate || today(),
       'Время записи': data.preferredTime || '10:00',
-      'Адрес': data.direction === 'Авто' ? '' : (data.address || '').trim(),
-      'Авто': data.direction === 'Авто' ? (data.address || '').trim() : '',
+      'Адрес': inferDirection(data.service) === 'Авто' ? '' : (data.address || '').trim(),
+      'Авто': inferDirection(data.service) === 'Авто' ? (data.address || '').trim() : '',
       'Комментарий клиента': (data.task || '').trim(),
       'Статус': 'Новая заявка',
       'Источник': 'Сайт'
